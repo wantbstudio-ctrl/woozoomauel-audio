@@ -1,0 +1,48 @@
+﻿<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Woozoomauel Audio Player</title>
+<style>
+html,body{margin:0;background:transparent;font-family:Arial,'Noto Sans KR','Segoe UI',sans-serif}
+#wm-mp3-player{width:260px;box-sizing:border-box;padding:14px 13px 13px;border:1px solid rgba(113,255,230,.58);border-radius:20px;background:radial-gradient(circle at 86% 8%,rgba(90,255,228,.17),transparent 32%),linear-gradient(160deg,rgba(5,36,46,.97),rgba(3,9,20,.99) 68%);color:#eafff8;box-shadow:0 0 28px rgba(0,255,210,.24),0 12px 28px rgba(0,0,0,.38),inset 0 0 24px rgba(255,255,255,.04);overflow:hidden}
+.wm-label{color:#74ffe9;font-size:10px;font-weight:900;letter-spacing:3px;margin-bottom:8px}.wm-title{color:#fff;font-size:18px;line-height:1.18;font-weight:900;margin-bottom:10px}.wm-screen{padding:10px;border:1px solid rgba(113,255,230,.25);border-radius:14px;background:rgba(1,8,15,.76);margin-bottom:10px}.wm-state{color:#6effe4;font-size:10px;font-weight:900;letter-spacing:2px;margin-bottom:8px}.wm-track{color:#fff;font-size:12px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.wm-meter{height:4px;margin-top:10px;background:rgba(120,255,224,.18);border-radius:99px;overflow:hidden}.wm-meter span{display:block;width:38%;height:100%;background:#6effe4}.wm-controls{display:grid;grid-template-columns:44px 1fr 44px;gap:8px}.wm-controls button{height:38px;border:0;border-radius:13px;background:rgba(1,8,15,.82);color:#86ffee;font-size:14px;font-weight:900;cursor:pointer}.wm-controls #wm-play{background:linear-gradient(135deg,#68f5db,#d4fff4);color:#00151c;font-size:12px}
+</style>
+</head>
+<body>
+<div id="wm-mp3-player">
+  <div class="wm-label">PROJECT H.O.M.E</div>
+  <div class="wm-title">Observer One<br>Audio Console</div>
+  <div class="wm-screen">
+    <div id="wm-state" class="wm-state">READY</div>
+    <div id="wm-track" class="wm-track">TRACK 01 - Observer One</div>
+    <div class="wm-meter"><span></span></div>
+  </div>
+  <div class="wm-controls">
+    <button id="wm-prev" type="button">&#9664;</button>
+    <button id="wm-play" type="button">PLAY</button>
+    <button id="wm-next" type="button">&#9654;</button>
+  </div>
+  <audio id="wm-audio" loop preload="auto"></audio>
+</div>
+<script>
+(function(){
+  var tracks=[
+    {title:'Observer One',url:'observer-one-add-vocal.mp3'},
+    {title:'Dont Worry About Me',url:'dont-worry-about-me.mp3'},
+    {title:'No Morning For Me',url:'no-morning-for-me.mp3'},
+    {title:'Party For One',url:'party-for-one.mp3'}
+  ];
+  var index=0,audio=document.getElementById('wm-audio'),play=document.getElementById('wm-play'),prev=document.getElementById('wm-prev'),next=document.getElementById('wm-next'),state=document.getElementById('wm-state'),track=document.getElementById('wm-track');
+  function label(){track.textContent='TRACK '+String(index+1).padStart(2,'0')+' - '+tracks[index].title;}
+  function sync(){play.textContent=audio.paused?'PLAY':'PAUSE';state.textContent=audio.paused?'READY':'PLAYING';label();}
+  function load(autoplay){audio.src=tracks[index].url;audio.load();label();if(autoplay){audio.play().then(sync).catch(sync);}else{sync();}}
+  play.onclick=function(){if(audio.paused){audio.play().then(sync).catch(sync);}else{audio.pause();sync();}};
+  prev.onclick=function(){index=(index+tracks.length-1)%tracks.length;load(true);};
+  next.onclick=function(){index=(index+1)%tracks.length;load(true);};
+  audio.onplay=sync;audio.onpause=sync;audio.onended=function(){index=(index+1)%tracks.length;load(true);};load(false);
+})();
+</script>
+</body>
+</html>
